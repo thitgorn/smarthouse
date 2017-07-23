@@ -1,6 +1,10 @@
 var link = "http://158.108.165.223/data/fukseed/";
 var people = 0; // count how many person in house
 var doorState = 0; // define 1 = outside in , define 2 = insite go out site.
+var lightState = 0;
+var airState = 0;
+// 0 for off
+// 1 for on
 
 $(document).ready(function() {
   console.log("im ready");
@@ -13,7 +17,6 @@ $(document).ready(function() {
   }, 1000);
 });
 
-
 var LIGHTCONSTANT = 500;
 // this is just revieve the number of light
 function recieveLight() {
@@ -21,12 +24,24 @@ function recieveLight() {
     url: link + "light"
   })
     .done(function(data) {
-        if(data>=LIGHTCONSTANT){
-            // openLight();
-        }
+      switch (ligthState) {
+        case 0:
+          if (parseInt(data) <= LIGHTCONSTANT) {
+            openLight();
+            lightState = 1;
+          }
+          break;
+        case 1:
+          if (parseInt(data) >= LIGHTCONSTANT) {
+            closeLight();
+            lightState = 0;
+          }
+      }
     })
     .fail();
 }
+
+var TEMPCONSTANT = 25;
 
 // this is for recieving the tempearture in house
 function recieveTemperature() {
@@ -34,6 +49,19 @@ function recieveTemperature() {
     url: link + "temperature"
   })
     .done(function(data) {
+      switch (airState) {
+        case 0:
+          if (parseInt <= TEMPCONSTANT) {
+            openAir();
+            airState = 1;
+          }
+          break;
+        case 1:
+          if (parseInt >= TEMPCONSTANT) {
+            closeAir();
+            airState = 0;
+          }
+      }
     })
     .fail();
 }
@@ -46,27 +74,27 @@ function recieveUltra1() {
     url: link + "ultra1"
   })
     .done(function(data) {
-        switch(doorState){
-            case 0:// DO NOT THING;
-            if( ULTRACONSTANT!==parseInt(data) ){
-                doorState = 1;
-                openDoor();
-            }
-            break;
-            case 1:// keep waiting until user walk out;
-            if( ULTRACONSTANT===parseInt(data)){
-                doorState = 2;
-            }
-            break;
-            case 4:
-            if(ULTRACONSTANT===parseInt(data)){
-                people--;
-                closeDoor;
-                doorState = 0;
-            }
-            break;
-            default://DONOTHTING
-        }
+      switch (doorState) {
+        case 0: // DO NOT THING;
+          if (ULTRACONSTANT !== parseInt(data)) {
+            doorState = 1;
+            openDoor();
+          }
+          break;
+        case 1: // keep waiting until user walk out;
+          if (ULTRACONSTANT === parseInt(data)) {
+            doorState = 2;
+          }
+          break;
+        case 4:
+          if (ULTRACONSTANT === parseInt(data)) {
+            people--;
+            closeDoor;
+            doorState = 0;
+          }
+          break;
+        default: //DONOTHTING
+      }
     })
     .fail();
 }
@@ -77,39 +105,87 @@ function recieveUltra2() {
     url: link + "ultra2"
   })
     .done(function(data) {
-        switch(doorState){
-            case 0:// DO NOT THING;
-            if( ULTRACONSTANT!==parseInt(data) ){
-                openDoor();
-                doorState = 3;
-            }break;
-            case 2:// wait ultil user walk out;
-            if( ULTRACONSTANT===parseInt(data)){
-                closeDoor();
-                people++;
-                doorState = 0;
-            }break;
-            case 3:
-            if( ULTRACONSTANT===parseInt(data)){
-                doorState = 4;
-            }break;
-            default://DONOTHTING
-        }
+      switch (doorState) {
+        case 0: // DO NOT THING;
+          if (ULTRACONSTANT !== parseInt(data)) {
+            openDoor();
+            doorState = 3;
+          }
+          break;
+        case 2: // wait ultil user walk out;
+          if (ULTRACONSTANT === parseInt(data)) {
+            closeDoor();
+            people++;
+            doorState = 0;
+          }
+          break;
+        case 3:
+          if (ULTRACONSTANT === parseInt(data)) {
+            doorState = 4;
+          }
+          break;
+        default: //DONOTHTING
+      }
     })
     .fail();
 }
 
-
-function openDoor(){
-    console.log("open door");
-    // Do open door.
-    // sent text to server
-    // TODO
+function openDoor() {
+  $.ajax({
+    url: link + "door/set/open"
+  })
+    .done(function(data) {
+      console.log("Door is opening!!");
+    })
+    .fail();
 }
 
-function closeDoor(){
-    console.log("close door");
-    // Do close door
-    // sent text to server.
-    // TODO
+function closeDoor() {
+  $.ajax({
+    url: link + "door/set/close"
+  })
+    .done(function(data) {
+      console.log("Door is closing!!");
+    })
+    .fail();
+}
+
+function openLight() {
+  $.ajax({
+    url: link + "lamp/set/open"
+  })
+    .done(function(data) {
+      console.log("light is opening!!");
+    })
+    .fail();
+}
+
+function closeLight() {
+  $.ajax({
+    url: link + "lamp/set/close"
+  })
+    .done(function(data) {
+      console.log("light is closing!!");
+    })
+    .fail();
+}
+
+function openAir() {
+  $.ajax({
+    url: link + "air/set/open"
+  })
+    .done(function(data) {
+      console.log("air is opening!!");
+    })
+    .fail();
+}
+
+function closeAir() {
+  $.ajax({
+    url: link + "air/set/close"
+  })
+    .done(function(data) {
+      console.log("air is closing!!");
+    })
+    .fail();
 }
