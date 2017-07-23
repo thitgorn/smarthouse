@@ -8,6 +8,8 @@
     height: 180px;
     border: 2px solid #4dd2ff;
     border-radius: 12px;
+    font-size: 40px
+
 }
 
 #lightSen{
@@ -47,8 +49,25 @@ margin-left: 50px;
 
 #picture{
   margin-left: 60px;
+  margin-top: 100px;
+}
+
+#sweet{
+  margin-top: 20px;
+    margin-left: 60px;
 }
 
 #row-2{
   padding-left: 67px;
+  }
+
+  #button{
+    background-color: #4CAF50;
+    border-radius: 12px;
+   padding: 15px 32px;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 16px;
+   margin: 4px 2px;
+   cursor: pointer;
   }
