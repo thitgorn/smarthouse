@@ -1,3 +1,4 @@
+<!DOCTYPE HTML>
 <html>
 
 <head>
@@ -13,7 +14,7 @@
 <body style="background-color:#bfff80">
     <ol class="breadcrumb">
         <li><a href="#">Home</a></li>
-        <li><a href="#">Automatic</a></li>
+        <li><a href="#" id="mode">Manual</a></li>
     </ol>
     <div class="col-lg-12">
         <div class="col=lg-8">
@@ -23,24 +24,24 @@
                         <p>
                             <center>Door</center>
                         </p>
-                        <button class="button" id="button">Open</button>
-                        <button class="button" id="button">Close</button>
+                        <button class="button col-md-5" id="doorOpen">Open</button>
+                        <button class="button col-md-5" id="doorClose">Close</button>
                     </div>
 
                     <div id="lightSen">
                         <p>
                             <center>Light</center>
                         </p>
-                        <button class="button1" id="button1">On</button>
-                        <button class="button1" id="button1">Off</button>
+                        <button class="button1 col-md-5" id="lightOn">On</button>
+                        <button class="button1 col-md-5" id="lightOff">Off</button>
                     </div>
 
                     <div id="airSen">
                         <p>
                             <center>Airconditoner</center>
                         </p>
-                        <button class="button2" id="button2">Open</button>
-                        <button class="button2" id="button2">Close</button>
+                        <button class="button2 col-md-5" id="airOn">On</button>
+                        <button class="button2 col-md-5" id="airOff">Off</button>
                     </div>
                 </div>
             </div>
@@ -58,12 +59,13 @@
         <div class="col-lg-4">
             <div id="row-2">
                 <div id="showTemp">
-                    <p><center>Temperature <center></p>
+                    <p><center>Temperature</p>
+                    <div id="currentTemp"></div> </center>
                 </div>
                 <div id="showPeople">
-                    <p><center> We have <center></p>
-                      <p><center>people</center></p>
-                    <p><center>in the house<center></p>
+                    <p><center> We have </center></p>
+                      <p><center><span id="currentPeople"></span> people</center></p>
+                    <p><center>in the house</center></p>
                 </div>
             </div>
 

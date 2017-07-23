@@ -3,20 +3,46 @@ var people = 0; // count how many person in house
 var doorState = 0; // define 1 = outside in , define 2 = insite go out site.
 var lightState = 0;
 var airState = 0;
+var isAuto = false;
 // 0 for off
 // 1 for on
-
 $(document).ready(function() {
+  setup();
   console.log("im ready");
-  $('#showPeople').html(people);
+
+  $("#currentPeople").html(people);
   setInterval(function() {
-    recieveLight();
-    recieveTemperature();
-    recieveUltra1();
-    recieveUltra2();
+    if (isAuto) {
+      recieveLight();
+      recieveTemperature();
+      recieveUltra1();
+      recieveUltra2();
+    } else {
+        manualUltra1();
+        manualUltra2();
+        recieveTemperature();
+    }
     console.log("total people : " + people);
   }, 1000);
 });
+
+function setup(){
+  $('#mode').click(function(){
+     var mode = $('#mode'); 
+     if(isAuto){
+         mode.html("Manual");
+      } else {
+          mode.html("Automatic")
+      }
+     isAuto = !isAuto;
+  });
+  $('#doorOpen').click(()=>openDoor());
+  $('#doorClose').click(()=>closeDoor());
+  $('#lightOn').click(()=>openLight());
+  $('#lightOff').click(()=>closeDoor());
+  $('#airOn').click(()=>openAir());
+  $('#airOff').click(()=>closeAir());
+}
 
 var LIGHTCONSTANT = 500;
 // this is just revieve the number of light
@@ -42,24 +68,22 @@ function recieveLight() {
     .fail();
 }
 
-var TEMPCONSTANT = 25;
-
 // this is for recieving the tempearture in house
 function recieveTemperature() {
   $.ajax({
     url: link + "temperature"
   })
     .done(function(data) {
-        $('#showTemp').html(data);
+      $("#currentTemp").html(data);
       switch (airState) {
         case 0:
-          if (parseInt <= TEMPCONSTANT) {
+          if (parseInt(data) <= 25) {
             openAir();
             airState = 1;
           }
           break;
         case 1:
-          if (parseInt >= TEMPCONSTANT) {
+          if (parseInt(data) <= 20) {
             closeAir();
             airState = 0;
           }
@@ -69,6 +93,66 @@ function recieveTemperature() {
 }
 
 var ULTRACONSTANT = 10;
+
+function manualUltra1(){
+    $.ajax({
+    url: link + "ultra1"
+  })
+    .done(function(data) {
+      switch (doorState) {
+        case 0: // DO NOT THING;
+          if (ULTRACONSTANT !== parseInt(data)) {
+            doorState = 1;
+          }
+          break;
+        case 1: // keep waiting until user walk out;
+          if (ULTRACONSTANT === parseInt(data)) {
+            doorState = 2;
+          }
+          break;
+        case 4:
+          if (ULTRACONSTANT === parseInt(data)) {
+            people--;
+            $("#currentPeople").html(people);
+            closeDoor;
+            doorState = 0;
+          }
+          break;
+        default: //DONOTHTING
+      }
+    })
+    .fail();
+}
+
+function manualUltra2(){
+  $.ajax({
+    url: link + "ultra2"
+  })
+    .done(function(data) {
+      switch (doorState) {
+        case 0: // DO NOT THING;
+          if (ULTRACONSTANT !== parseInt(data)) {
+            openDoor();
+            doorState = 3;
+          }
+          break;
+        case 2: // wait ultil user walk out;
+          if (ULTRACONSTANT === parseInt(data)) {
+            people++;
+            $("#currentPeople").html(people);
+            doorState = 0;
+          }
+          break;
+        case 3:
+          if (ULTRACONSTANT === parseInt(data)) {
+            doorState = 4;
+          }
+          break;
+        default: //DONOTHTING
+      }
+    })
+    .fail();
+}
 
 // this is for recieving the ultrasonic in front of door/
 function recieveUltra1() {
@@ -91,7 +175,7 @@ function recieveUltra1() {
         case 4:
           if (ULTRACONSTANT === parseInt(data)) {
             people--;
-            $('#showPeople').html(people);
+            $("#currentPeople").html(people);
             closeDoor;
             doorState = 0;
           }
@@ -119,7 +203,7 @@ function recieveUltra2() {
           if (ULTRACONSTANT === parseInt(data)) {
             closeDoor();
             people++;
-             $('#showPeople').html(people);
+            $("#currentPeople").html(people);
             doorState = 0;
           }
           break;
@@ -176,7 +260,7 @@ function closeLight() {
 
 function openAir() {
   $.ajax({
-    url: link + "air/set/open"
+    url: link + "air/set/on"
   })
     .done(function(data) {
       console.log("air is opening!!");
@@ -186,7 +270,7 @@ function openAir() {
 
 function closeAir() {
   $.ajax({
-    url: link + "air/set/close"
+    url: link + "air/set/off"
   })
     .done(function(data) {
       console.log("air is closing!!");
