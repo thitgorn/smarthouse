@@ -8,7 +8,7 @@ var airState = 0;
 
 $(document).ready(function() {
   console.log("im ready");
-
+  $('#showPeople').html(people);
   setInterval(function() {
     recieveLight();
     recieveTemperature();
@@ -50,6 +50,7 @@ function recieveTemperature() {
     url: link + "temperature"
   })
     .done(function(data) {
+        $('#showTemp').html(data);
       switch (airState) {
         case 0:
           if (parseInt <= TEMPCONSTANT) {
@@ -90,6 +91,7 @@ function recieveUltra1() {
         case 4:
           if (ULTRACONSTANT === parseInt(data)) {
             people--;
+            $('#showPeople').html(people);
             closeDoor;
             doorState = 0;
           }
@@ -117,6 +119,7 @@ function recieveUltra2() {
           if (ULTRACONSTANT === parseInt(data)) {
             closeDoor();
             people++;
+             $('#showPeople').html(people);
             doorState = 0;
           }
           break;
