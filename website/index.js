@@ -31,8 +31,20 @@ function setup(){
      var mode = $('#mode'); 
      if(isAuto){
          mode.html("Manual");
+          $("#doorOpen").removeAttr("disabled");
+          $("#doorClose").removeAttr("disabled");
+          $("#lightOn").removeAttr("disabled");
+          $("#lightOff").removeAttr("disabled");
+          $("#airOn").removeAttr("disabled");
+          $("#airOff").removeAttr("disabled");
       } else {
-          mode.html("Automatic")
+          mode.html("Automatic");
+          $("#doorOpen").attr("disabled", "disabled");
+          $("#doorClose").attr("disabled", "disabled");
+          $("#lightOn").attr("disabled", "disabled");
+          $("#lightOff").attr("disabled", "disabled");
+          $("#airOn").attr("disabled", "disabled");
+          $("#airOff").attr("disabled", "disabled");
       }
      isAuto = !isAuto;
   });
