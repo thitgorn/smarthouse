@@ -14,6 +14,7 @@ $(document).ready(function() {
     recieveTemperature();
     recieveUltra1();
     recieveUltra2();
+    console.log("total people : " + people);
   }, 1000);
 });
 
@@ -24,15 +25,15 @@ function recieveLight() {
     url: link + "light"
   })
     .done(function(data) {
-      switch (ligthState) {
+      switch (lightState) {
         case 0:
-          if (parseInt(data) <= LIGHTCONSTANT) {
+          if (parseInt(data) >= LIGHTCONSTANT) {
             openLight();
             lightState = 1;
           }
           break;
         case 1:
-          if (parseInt(data) >= LIGHTCONSTANT) {
+          if (parseInt(data) < LIGHTCONSTANT) {
             closeLight();
             lightState = 0;
           }
@@ -76,18 +77,18 @@ function recieveUltra1() {
     .done(function(data) {
       switch (doorState) {
         case 0: // DO NOT THING;
-          if (ULTRACONSTANT !== parseInt(data)) {
+          if (ULTRACONSTANT >= parseInt(data)) {
             doorState = 1;
             openDoor();
           }
           break;
         case 1: // keep waiting until user walk out;
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRACONSTANT <= parseInt(data)) {
             doorState = 2;
           }
           break;
         case 4:
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRACONSTANT <= parseInt(data)) {
             people--;
             closeDoor;
             doorState = 0;
@@ -107,20 +108,20 @@ function recieveUltra2() {
     .done(function(data) {
       switch (doorState) {
         case 0: // DO NOT THING;
-          if (ULTRACONSTANT !== parseInt(data)) {
+          if (ULTRACONSTANT >= parseInt(data)) {
             openDoor();
             doorState = 3;
           }
           break;
         case 2: // wait ultil user walk out;
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRACONSTANT <= parseInt(data)) {
             closeDoor();
             people++;
             doorState = 0;
           }
           break;
         case 3:
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRACONSTANT <= parseInt(data)) {
             doorState = 4;
           }
           break;
@@ -152,7 +153,7 @@ function closeDoor() {
 
 function openLight() {
   $.ajax({
-    url: link + "lamp/set/open"
+    url: link + "lamp/set/on"
   })
     .done(function(data) {
       console.log("light is opening!!");
@@ -162,7 +163,7 @@ function openLight() {
 
 function closeLight() {
   $.ajax({
-    url: link + "lamp/set/close"
+    url: link + "lamp/set/off"
   })
     .done(function(data) {
       console.log("light is closing!!");
