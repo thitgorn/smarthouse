@@ -1,0 +1,54 @@
+#firstTap{
+   bgcolor: #e1e1ea;
+   padding-left:
+}
+
+#tempSen{
+    width: 300px;
+    height: 180px;
+    border: 2px solid #4dd2ff;
+    border-radius: 12px;
+}
+
+#lightSen{
+  width: 300px;
+  height: 180px;
+  border: 2px solid #4dd2ff;
+  border-radius: 12px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#ultraSen{
+  width: 300px;
+  height: 180px;
+  border: 2px solid #4dd2ff;
+  border-radius: 12px;
+}
+
+#row-1{
+margin-left: 50px;
+}
+
+#showTemp{
+  width: 350px;
+  height: 220px;
+  border: 2px solid #4dd2ff;
+  border-radius: 12px;
+}
+
+#showPeople{
+  width: 350px;
+  height: 220px;
+  border: 2px solid #4dd2ff;
+  border-radius: 12px;
+  margin-top: 137px;
+}
+
+#picture{
+  margin-left: 60px;
+}
+
+#row-2{
+  padding-left: 67px;
+  }
