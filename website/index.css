@@ -19,13 +19,15 @@
   border-radius: 12px;
   margin-top: 20px;
   margin-bottom: 20px;
+  font-size: 40px
 }
 
-#ultraSen{
+#airSen{
   width: 300px;
   height: 180px;
   border: 2px solid #4dd2ff;
   border-radius: 12px;
+  font-size: 40px
 }
 
 #row-1{
@@ -37,6 +39,7 @@ margin-left: 50px;
   height: 220px;
   border: 2px solid #4dd2ff;
   border-radius: 12px;
+  font-size: 30px;
 }
 
 #showPeople{
@@ -45,6 +48,7 @@ margin-left: 50px;
   border: 2px solid #4dd2ff;
   border-radius: 12px;
   margin-top: 137px;
+  font-size: 30px;
 }
 
 #picture{
@@ -62,12 +66,34 @@ margin-left: 50px;
   }
 
   #button{
-    background-color: #4CAF50;
+    background-color: #66b3ff;
     border-radius: 12px;
    padding: 15px 32px;
    text-decoration: none;
    display: inline-block;
-   font-size: 16px;
+   font-size: 20px;
+   margin: 4px 2px;
+   cursor: pointer;
+  }
+
+  #button1{
+    background-color: #66b3ff;
+    border-radius: 12px;
+   padding: 15px 32px;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 20px;
+   margin: 4px 2px;
+   cursor: pointer;
+  }
+
+  #button2{
+    background-color: #66b3ff;
+    border-radius: 12px;
+   padding: 15px 32px;
+   text-decoration: none;
+   display: inline-block;
+   font-size: 20px;
    margin: 4px 2px;
    cursor: pointer;
   }
