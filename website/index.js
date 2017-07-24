@@ -17,10 +17,11 @@ $(document).ready(function() {
       recieveTemperature();
       recieveUltra1();
       recieveUltra2();
+      console.log(doorState);
     } else {
         manualUltra1();
         manualUltra2();
-        recieveTemperature();
+        showTemperature();
     }
     console.log("total people : " + people);
   }, 1000);
@@ -51,7 +52,7 @@ function setup(){
   $('#doorOpen').click(()=>openDoor());
   $('#doorClose').click(()=>closeDoor());
   $('#lightOn').click(()=>openLight());
-  $('#lightOff').click(()=>closeDoor());
+  $('#lightOff').click(()=>closeLight());
   $('#airOn').click(()=>openAir());
   $('#airOff').click(()=>closeAir());
 }
@@ -89,7 +90,7 @@ function recieveTemperature() {
       $("#currentTemp").html(data);
       switch (airState) {
         case 0:
-          if (parseInt(data) <= 25) {
+          if (parseInt(data) >= 29) {
             openAir();
             airState = 1;
           }
@@ -104,7 +105,18 @@ function recieveTemperature() {
     .fail();
 }
 
-var ULTRACONSTANT = 10;
+function showTemperature() {
+  $.ajax({
+    url: link + "temperature"
+  })
+    .done(function(data) {
+      $("#currentTemp").html(data);
+    })
+    .fail();
+}
+
+var ULTRACONSTANT = 9;
+var ULTRADOORCONSTANT = 5;
 
 function manualUltra1(){
     $.ajax({
@@ -113,17 +125,17 @@ function manualUltra1(){
     .done(function(data) {
       switch (doorState) {
         case 0: // DO NOT THING;
-          if (ULTRACONSTANT !== parseInt(data)) {
+          if (ULTRACONSTANT >= parseInt(data)) {
             doorState = 1;
           }
           break;
         case 1: // keep waiting until user walk out;
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRACONSTANT <= parseInt(data)) {
             doorState = 2;
           }
           break;
         case 4:
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRACONSTANT <= parseInt(data)) {
             people--;
             $("#currentPeople").html(people);
             closeDoor;
@@ -143,20 +155,19 @@ function manualUltra2(){
     .done(function(data) {
       switch (doorState) {
         case 0: // DO NOT THING;
-          if (ULTRACONSTANT !== parseInt(data)) {
-            openDoor();
+          if (ULTRACONSTANT >= parseInt(data)) {
             doorState = 3;
           }
           break;
         case 2: // wait ultil user walk out;
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRADOORCONSTANT <= parseInt(data)) {
             people++;
             $("#currentPeople").html(people);
             doorState = 0;
           }
           break;
         case 3:
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRADOORCONSTANT <= parseInt(data)) {
             doorState = 4;
           }
           break;
@@ -174,22 +185,25 @@ function recieveUltra1() {
     .done(function(data) {
       switch (doorState) {
         case 0: // DO NOT THING;
-          if (ULTRACONSTANT !== parseInt(data)) {
+          if (ULTRACONSTANT >= parseInt(data)) {
             doorState = 1;
+            console.log("0");
             openDoor();
           }
           break;
         case 1: // keep waiting until user walk out;
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRACONSTANT <= parseInt(data)) {
             doorState = 2;
+            console.log("1");
           }
           break;
         case 4:
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRACONSTANT <= parseInt(data)) {
             people--;
             $("#currentPeople").html(people);
             closeDoor;
             doorState = 0;
+            console.log("4");
           }
           break;
         default: //DONOTHTING
@@ -206,22 +220,25 @@ function recieveUltra2() {
     .done(function(data) {
       switch (doorState) {
         case 0: // DO NOT THING;
-          if (ULTRACONSTANT !== parseInt(data)) {
+          if (ULTRACONSTANT >= parseInt(data)) {
             openDoor();
             doorState = 3;
+            console.log("0");
           }
           break;
         case 2: // wait ultil user walk out;
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRADOORCONSTANT <= parseInt(data)) {
             closeDoor();
             people++;
             $("#currentPeople").html(people);
             doorState = 0;
+            console.log("2");
           }
           break;
         case 3:
-          if (ULTRACONSTANT === parseInt(data)) {
+          if (ULTRADOORCONSTANT <= parseInt(data)) {
             doorState = 4;
+            console.log("4");
           }
           break;
         default: //DONOTHTING
@@ -235,7 +252,7 @@ function openDoor() {
     url: link + "door/set/open"
   })
     .done(function(data) {
-      console.log("Door is opening!!");
+      $('#showDoor').html(":open");
     })
     .fail();
 }
@@ -245,7 +262,7 @@ function closeDoor() {
     url: link + "door/set/close"
   })
     .done(function(data) {
-      console.log("Door is closing!!");
+        $('#showDoor').html(":close");
     })
     .fail();
 }
@@ -255,7 +272,7 @@ function openLight() {
     url: link + "lamp/set/on"
   })
     .done(function(data) {
-      console.log("light is opening!!");
+       $('#showLight').html(":Bright");
     })
     .fail();
 }
@@ -265,7 +282,7 @@ function closeLight() {
     url: link + "lamp/set/off"
   })
     .done(function(data) {
-      console.log("light is closing!!");
+       $('#showLight').html(":Dark");
     })
     .fail();
 }
@@ -275,7 +292,7 @@ function openAir() {
     url: link + "air/set/on"
   })
     .done(function(data) {
-      console.log("air is opening!!");
+      $('#showAir').html(":On");
     })
     .fail();
 }
@@ -285,7 +302,7 @@ function closeAir() {
     url: link + "air/set/off"
   })
     .done(function(data) {
-      console.log("air is closing!!");
+      $('#showAir').html(":Off");
     })
     .fail();
 }
